@@ -1,0 +1,25 @@
+Compilation:
+```
+arm-none-eabi-gcc \
+    -mcpu=cortex-m4 \
+    -mthumb \
+    -mfloat-abi=soft \
+    -ffreestanding \
+    -fno-builtin \
+    -ffunction-sections \
+    -fdata-sections \
+    -g3 -O0 \
+    -Wall -Wextra \
+    -nostdlib \
+    -T linker/tm4c123gh6pm.ld \
+    -Wl,--gc-sections \
+    -Wl,-Map=build/firmware.map \
+    startup/startup.S src/main.c src/morse_LED.c\
+    -o build/firmware.elf -I include
+```
+
+flash onto MCU:
+```
+openocd -f board/ek-tm4c123gxl.cfg \
+    -c "program build/firmware.elf verify reset exit"
+```

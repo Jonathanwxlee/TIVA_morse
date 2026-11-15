@@ -1,5 +1,12 @@
 #include <stdint.h>
 
+void delay(volatile uint32_t count)
+{
+    while (count > 0)
+    {
+        count--;
+    }
+}
 
 const char *morse_encode(char letter){
     switch (letter) {
@@ -32,7 +39,19 @@ const char *morse_encode(char letter){
     }
 }
 
-void flash_morse_letter(volatile uint32_t* led_data_r, char* seq){
+static void led_dot(volatile uint32_t* led_data_r){
+    *led_data_r = 1;
+    delay(200000);
+    *led_data_r = 0;
+}
+
+static void led_dash(volatile uint32_t* led_data_r){
+    *led_data_r = 1;
+    delay(800000);
+    *led_data_r = 0;
+}
+
+void flash_morse_letter(volatile uint32_t* led_data_r, const char* seq){
     while (*seq != '\0') {
         if (*seq == '.') {
             led_dot(led_data_r);
@@ -42,16 +61,4 @@ void flash_morse_letter(volatile uint32_t* led_data_r, char* seq){
         seq++;
         delay(200000); // in between letters
     }
-}
-
-void led_dot(volatile uint32_t* led_data_r){
-    *led_data_r = 1;
-    delay(200000);
-    *led_data_r = 0;
-}
-
-void led_dash(volatile uint32_t* led_data_r){
-    *led_data_r = 1;
-    delay(800000);
-    *led_data_r = 0;
 }
