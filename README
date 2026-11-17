@@ -23,3 +23,30 @@ flash onto MCU:
 openocd -f board/ek-tm4c123gxl.cfg \
     -c "program build/firmware.elf verify reset exit"
 ```
+
+DEBUGGING:
+
+Prerequisite: install arm-none-eabi-gdb. Connect board to mac. 
+
+1. Have OpenOCD start the gdb server on the board. This is typically done on port 3333
+```
+openocd -f board/ti_ek-tm4c123gxl.cfg
+```
+2. In another terminal, start the gdb and load the debuggign info compiled into the .eld file:
+```
+arm-none-eabi-gdb build/firmware.elf
+```
+3. Inside the gdb, connect to the OpenOCD server on the board. This allows you to communicate with your processor!
+```
+target extended-remote localhost:3333
+```
+
+Useful commands:
+break <function>
+monitor reset halt : reset the processor and pause it
+backtrace : show the current call stack
+x/1tw <address> : allows you to examine the 32 bit value at a memory address. 
+- syntax: x/[count][Format][UnitSize]
+- count: how many units of memory to display
+- Format: how to interpret and print the data (x: hexadecimal, d: signed decimal, t: binary, c:Character. s: null terminated string)
+- Unit size: The size of each unit of memory to read (b : byte, w: word (4 bytes), g: giant word (8 bytes))

@@ -40,14 +40,14 @@ const char *morse_encode(char letter){
 }
 
 static void led_dot(volatile uint32_t* led_data_r){
-    *led_data_r = 1;
-    delay(200000);
+    *led_data_r = 0x08;
+    delay(800000);
     *led_data_r = 0;
 }
 
 static void led_dash(volatile uint32_t* led_data_r){
-    *led_data_r = 1;
-    delay(800000);
+    *led_data_r = 0x08;
+    delay(2400000);
     *led_data_r = 0;
 }
 
@@ -59,6 +59,6 @@ void flash_morse_letter(volatile uint32_t* led_data_r, const char* seq){
             led_dash(led_data_r);
         }
         seq++;
-        delay(200000); // in between letters
+        delay(400000); // in between sequence symbols
     }
 }

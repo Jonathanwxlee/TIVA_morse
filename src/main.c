@@ -30,13 +30,13 @@ PF4 : Mask:00010000 : 0x10 (Controls user switch 1 idk when this is yet)
 #define WORD_LEN 5
 
 int main(void){
-    const char *message = "HELLO";
+    const char *message = "WAGMI";
 
     // enable clock for GPIO port f peripheral
     SYSCTL_RCGCGPIO_R |= (1U << 5);
 
     // wait for SYSCTL_PRGPIO_R to indicate peripheral GPIO port f is ready
-    while (SYSCTL_PRGPIO_R & (1U << 5) == 0) {
+    while ((SYSCTL_PRGPIO_R & (1U << 5)) == 0) {
         //Infinite wait until the GPIO port f peripheral is set
     }
 
@@ -45,19 +45,26 @@ int main(void){
     // set the direction of GREEN_LED pin (PF3) as output
     GPIO_PORTF_DIR_R |= GREEN_LED;
 
+    GPIO_PORTF_DEN_R |= RED_LED;
+    GPIO_PORTF_DIR_R |= RED_LED;
+
     volatile uint32_t *green_led_mask_addr = (volatile uint32_t *)(GPIO_PORTF_BASE + (GREEN_LED << 2));
     volatile uint32_t *red_led_mask_addr = (volatile uint32_t *)(GPIO_PORTF_BASE + (RED_LED << 2));
 
+    const char *message_beg = message;
+
     while (1){ // infinitely repeat the morse. 
         *red_led_mask_addr = 0;
-        delay(400000);
+        delay(800000);
         while (*message != '\0') { // iterate over the letters of the word
             const char *morse_sequence = morse_encode(*message);
             // flash morse sequence
             flash_morse_letter(green_led_mask_addr, morse_sequence);
             message++;
+            delay(2400000); // between letters
         }
-        delay(400000);
-        *red_led_mask_addr = 1;
+        *red_led_mask_addr = RED_LED;
+        delay(800000);
+        message = message_beg;
     }
 }
