@@ -39,24 +39,24 @@ const char *morse_encode(char letter){
     }
 }
 
-static void led_dot(volatile uint32_t* led_data_r){
-    *led_data_r = 0x08;
+static void led_dot(volatile uint32_t* led_data_r, const uint32_t led_mask){
+    *led_data_r = led_mask;
     delay(800000);
     *led_data_r = 0;
 }
 
-static void led_dash(volatile uint32_t* led_data_r){
-    *led_data_r = 0x08;
+static void led_dash(volatile uint32_t* led_data_r, const uint32_t led_mask){
+    *led_data_r = led_mask;
     delay(2400000);
     *led_data_r = 0;
 }
 
-void flash_morse_letter(volatile uint32_t* led_data_r, const char* seq){
+void flash_morse_letter(volatile uint32_t* led_data_r, const uint32_t led_mask, const char* seq){
     while (*seq != '\0') {
         if (*seq == '.') {
-            led_dot(led_data_r);
+            led_dot(led_data_r, led_mask);
         } else {
-            led_dash(led_data_r);
+            led_dash(led_data_r, led_mask);
         }
         seq++;
         delay(400000); // in between sequence symbols

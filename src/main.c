@@ -59,7 +59,7 @@ int main(void){
         while (*message != '\0') { // iterate over the letters of the word
             const char *morse_sequence = morse_encode(*message);
             // flash morse sequence
-            flash_morse_letter(green_led_mask_addr, morse_sequence);
+            flash_morse_letter(green_led_mask_addr, GREEN_LED, morse_sequence);
             message++;
             delay(2400000); // between letters
         }
